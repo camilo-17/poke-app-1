@@ -1,0 +1,41 @@
+<div class="container mt-4">
+    <!-- Error Alert -->
+    <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+        {{ errorMessage }}
+    </div>
+
+    <!-- Pokémon List -->
+    <div class="row" *ngIf="pokemons.length > 0 && !errorMessage">
+        <div class="col-md-4 mb-4" *ngFor="let pokemon of pokemons">
+            <!-- Bootstrap Card for each Pokémon -->
+            <div class="card h-100">
+                <img [src]="pokemon.image" class="card-img-top" alt="{{ pokemon.name }}" />
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{ pokemon.name | uppercase }} (ID: {{ pokemon.id }})</h5>
+                    <p class="card-text">
+                        <strong>Type:</strong> {{ pokemon.types.join(', ') }} <br />
+                        <strong>Abilities:</strong> {{ pokemon.abilities.join(', ') }} <br />
+                        <strong>Height:</strong> {{ pokemon.height / 10 }} m <br />
+                        <strong>Weight:</strong> {{ pokemon.weight / 10 }} kg
+                    </p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" *ngFor="let stat of pokemon.stats">
+                            <strong>{{ stat.name | titlecase }}:</strong> {{ stat.base_stat }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="d-flex justify-content-between mt-4" *ngIf="pokemons.length > 0 && !errorMessage">
+        <button class="btn btn-outline-primary" (click)="previousPage()" [disabled]="offset === 0">Previous</button>
+        <button class="btn btn-outline-primary" (click)="nextPage()">Next</button>
+    </div>
+
+    <!-- No Pokémon Message -->
+    <div *ngIf="pokemons.length === 0 && !errorMessage">
+        <p class="text-muted">No Pokémon data available.</p>
+    </div>
+</div>
