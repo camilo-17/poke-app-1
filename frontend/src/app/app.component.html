@@ -1,12 +1,27 @@
 <div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <!-- Red Banner with Pokéball in the center -->
+            <div class="banner bg-danger d-flex align-items-center justify-content-center" style="height: 300px">
+                <img src="assets/images/pokeball-banner.png" alt="Pokeball" class="img-fluid" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-4">
+    <!-- Search Bar -->
+    <div class="input-group mb-4">
+        <input type="text" [(ngModel)]="searchTerm" class="form-control" (ngModelChange)="filterPokemons()" placeholder="Search Pokémon by name..." aria-label="Search Pokémon" />
+    </div>
+
     <!-- Error Alert -->
     <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
         {{ errorMessage }}
     </div>
 
     <!-- Pokémon List -->
-    <div class="row" *ngIf="pokemons.length > 0 && !errorMessage">
-        <div class="col-md-4 mb-4" *ngFor="let pokemon of pokemons">
+    <div class="row" *ngIf="filteredPokemons.length > 0 && !errorMessage">
+        <div class="col-md-4 mb-4" *ngFor="let pokemon of filteredPokemons">
             <!-- Bootstrap Card for each Pokémon -->
             <div class="card h-100">
                 <img [src]="pokemon.image" class="card-img-top" alt="{{ pokemon.name }}" />
@@ -29,13 +44,13 @@
     </div>
 
     <!-- Pagination Controls -->
-    <div class="d-flex justify-content-between mt-4" *ngIf="pokemons.length > 0 && !errorMessage">
+    <div class="d-flex justify-content-between mt-4" *ngIf="filteredPokemons.length > 0 && !errorMessage">
         <button class="btn btn-outline-primary" (click)="previousPage()" [disabled]="offset === 0">Previous</button>
         <button class="btn btn-outline-primary" (click)="nextPage()">Next</button>
     </div>
 
     <!-- No Pokémon Message -->
-    <div *ngIf="pokemons.length === 0 && !errorMessage">
-        <p class="text-muted">No Pokémon data available.</p>
+    <div *ngIf="filteredPokemons.length === 0 && !errorMessage">
+        <p class="text-muted">No Pokémon found.</p>
     </div>
 </div>

@@ -7,22 +7,32 @@ import { ApiService } from './services/api.service';
     styleUrl: './app.component.css',
 })
 export class AppComponent {
-    title = 'frontend';
     pokemons: any[] = [];
-    limit = 20;
+    filteredPokemons: any[] = [];
+    searchTerm: string = '';
+    errorMessage: string = '';
     offset = 0;
-    errorMessage: string | null = null;
+    limit = 20;
 
     ngOnInit(): void {
         this.fetchPokemons();
     }
     constructor(private apiService: ApiService) {}
 
+    filterPokemons(): void {
+        if (this.searchTerm.length > 0) {
+            this.filteredPokemons = this.pokemons.filter((pokemon) => pokemon.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
+        } else {
+            this.filteredPokemons = this.pokemons;
+        }
+    }
+
     fetchPokemons(): void {
         this.apiService.getPokemons(this.limit, this.offset).subscribe(
             (data) => {
                 this.pokemons = data.pokemons;
-                this.errorMessage = null; // Reset error message on success
+                this.errorMessage = ''; // Reset error message on success
+                this.filterPokemons();
             },
             (error) => {
                 this.errorMessage = error; // Set the error message returned from the service
