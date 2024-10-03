@@ -1,0 +1,20 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h3>Payment Confirmation</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Icono dependiendo del estado del pago -->
+                    <div [ngClass]="{ 'text-success': isPaymentSuccessful(), 'text-danger': !isPaymentSuccessful() }">
+                        <i class="bi" [ngClass]="isPaymentSuccessful() ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill'" style="font-size: 4rem"></i>
+                    </div>
+                    <p class="card-text mt-3">{{ paymentStatus }}</p>
+                    <a href="/" class="btn btn-primary">Go back to homepage</a>
+                </div>
+                <div class="card-footer text-muted">Thank you for choosing us!</div>
+            </div>
+        </div>
+    </div>
+</div>

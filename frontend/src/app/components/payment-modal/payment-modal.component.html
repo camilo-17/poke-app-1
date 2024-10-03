@@ -1,0 +1,14 @@
+<div class="container p-40">
+    <form (ngSubmit)="handlePayment()" [hidden]="showLoading">
+        <div id="card-element">
+            <!-- Stripe Card Element will be inserted here -->
+        </div>
+        <div class="d-flex justify-content-end mt-5">
+            <button class="btn btn-primary" type="submit">Pay</button>
+        </div>
+    </form>
+
+    <div *ngIf="showLoading">
+        <app-loader></app-loader>
+    </div>
+</div>

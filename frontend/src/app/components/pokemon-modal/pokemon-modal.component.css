@@ -3,14 +3,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  
-  .modal-header {
+}
+
+.modal-header {
     background-color: #f8d7da; /* Rojo claro */
     color: #721c24; /* Color de texto para el encabezado */
-  }
-  
-  .modal-footer {
+}
+
+.modal-footer {
     background-color: #f8d7da; /* Rojo claro */
     justify-content: flex-end;
-  }
+}

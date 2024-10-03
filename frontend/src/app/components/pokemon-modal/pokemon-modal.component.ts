@@ -12,9 +12,32 @@ export class PokemonModalComponent {
 
     constructor(public activeModal: NgbActiveModal) {}
 
+    expandedAbilities: { [key: number]: boolean } = {};
+
+    toggleAbility(index: number): void {
+        this.expandedAbilities[index] = !this.expandedAbilities[index];
+    }
+
+    getAbilityText(ability: any, index: number): string {
+        const fullText = ability.text;
+        const isExpanded = this.expandedAbilities[index];
+        if (fullText.length > 50 && !isExpanded) {
+            return fullText.slice(0, 50) + '...';
+        }
+        return fullText;
+    }
+
+    isAbilityTruncated(ability: any): boolean {
+        return ability.text.length > 50;
+    }
+
     ngOnInit(): void {
         this.weaknesses = this.getWeaknesses();
         this.resistances = this.getResistances();
+    }
+
+    buy() {
+        this.activeModal.close(1);
     }
 
     getWeaknesses(): string {
@@ -26,6 +49,6 @@ export class PokemonModalComponent {
     }
 
     closeModal() {
-        this.activeModal.close();
+        this.activeModal.close(0);
     }
 }

@@ -7,28 +7,31 @@ import { catchError } from 'rxjs/operators';
     providedIn: 'root',
 })
 export class ApiService {
-    private baseUrl = 'http://localhost:3000'; // URL to your Express API
+    private baseUrl = 'http://localhost:3000';
 
     constructor(private http: HttpClient) {}
 
-    // Method to fetch paginated Pokémon list with error handling
     getPokemons(): Observable<any> {
-        // const params = new HttpParams().set('limit', limit.toString()).set('offset', offset.toString());
-
-        return this.http.get(`${this.baseUrl}/pokeApi/cards`).pipe(
-            catchError(this.handleError) // Handle errors here
-        );
+        return this.http.get(`${this.baseUrl}/pokeApi/cards`).pipe(catchError(this.handleError));
     }
 
-    // Error handling method
+    createPaymentIntent(amount: number, currency: string): Observable<any> {
+        return this.http.post(`${this.baseUrl}/payment/create`, {
+            amount,
+            currency,
+        });
+    }
+
+    confimPayment(paymentIntentId: string): Observable<any> {
+        return this.http.post(`${this.baseUrl}/payment/confirm-payment`, { paymentIntentId });
+    }
+
     private handleError(error: HttpErrorResponse) {
         let errorMessage = 'An unknown error occurred!';
 
         if (error.error instanceof ErrorEvent) {
-            // Client-side or network error
             errorMessage = `Error: ${error.error.message}`;
         } else {
-            // Backend returned an unsuccessful response code
             errorMessage = `Server returned code: ${error.status}, error message is: ${error.message}`;
         }
 

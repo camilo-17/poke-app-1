@@ -1,8 +1,6 @@
-<div class="modal-header">
+<div class="modal-header justify-content-between">
     <h4 class="modal-title">{{ pokemon.name }} (HP: {{ pokemon.hp }})</h4>
-    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
-        <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
 </div>
 <div class="modal-body">
     <div class="row">
@@ -15,8 +13,14 @@
 
             <h5>Abilities</h5>
             <ul>
-                <li *ngFor="let ability of pokemon.abilities">
-                    <strong>{{ ability.name }}:</strong> {{ ability.text }}
+                <li *ngFor="let ability of pokemon.abilities; let i = index">
+                    <strong>{{ ability.name }}:</strong>
+                    {{ getAbilityText(ability, i) }}
+                    <ng-container *ngIf="isAbilityTruncated(ability)">
+                        <a href="javascript:void(0)" (click)="toggleAbility(i)">
+                            {{ expandedAbilities[i] ? 'Show Less' : 'Show More' }}
+                        </a>
+                    </ng-container>
                 </li>
             </ul>
 
@@ -33,8 +37,10 @@
 
         <!-- Right Column: Image and Chart -->
         <div class="col-md-6 text-center">
-            <img [src]="pokemon.images.small" alt="{{ pokemon.name }}" class="img-fluid mb-3">
-            <app-pokemon-chart [pokemon]="pokemon"></app-pokemon-chart> <!-- Chart component -->
+            <img [src]="pokemon.images.small" alt="{{ pokemon.name }}" class="img-fluid mb-3 custom-width" />
+            <app-pokemon-chart [pokemon]="pokemon"></app-pokemon-chart>
+            <button type="button" ngbAutofocus class="btn btn-success w-100" (click)="buy()">Comprar</button>
+            <!-- Chart component -->
         </div>
     </div>
 </div>
