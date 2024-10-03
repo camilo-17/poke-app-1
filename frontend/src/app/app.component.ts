@@ -1,55 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ApiService } from './services/api.service';
+import { firstValueFrom } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PokemonModalComponent } from './components/pokemon-modal/pokemon-modal.component';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrl: './app.component.css',
+    styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+    constructor(private apiService: ApiService, private modalService: NgbModal) {}
+    title = 'Pokemon Trading Card Info';
     pokemons: any[] = [];
-    filteredPokemons: any[] = [];
     searchTerm: string = '';
-    errorMessage: string = '';
-    offset = 0;
-    limit = 20;
+    filteredPokemons: any[] = [];
 
-    ngOnInit(): void {
-        this.fetchPokemons();
-    }
-    constructor(private apiService: ApiService) {}
-
-    filterPokemons(): void {
-        if (this.searchTerm.length > 0) {
-            this.filteredPokemons = this.pokemons.filter((pokemon) => pokemon.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
-        } else {
-            this.filteredPokemons = this.pokemons;
-        }
+    async ngOnInit() {
+        await this.getPokemons();
     }
 
-    fetchPokemons(): void {
-        this.apiService.getPokemons(this.limit, this.offset).subscribe(
-            (data) => {
-                this.pokemons = data.pokemons;
-                this.errorMessage = ''; // Reset error message on success
-                this.filterPokemons();
-            },
-            (error) => {
-                this.errorMessage = error; // Set the error message returned from the service
-                console.error('Error fetching Pokémon data:', error);
-            }
-        );
+    // Mocked API call
+    async getPokemons() {
+        const cards: any = await firstValueFrom(this.apiService.getPokemons());
+        this.pokemons = cards.data;
+        this.filteredPokemons = this.pokemons;
     }
 
-    nextPage(): void {
-        this.offset += this.limit;
-        this.fetchPokemons();
+    applySearchTerm(): void {
+        this.filteredPokemons = this.searchTerm ? this.pokemons.filter((pokemon) => pokemon.name.toLowerCase().includes(this.searchTerm.toLowerCase())) : this.pokemons;
     }
 
-    previousPage(): void {
-        if (this.offset >= this.limit) {
-            this.offset -= this.limit;
-            this.fetchPokemons();
-        }
+    // Open the modal when a Pokémon is clicked
+    openPokemonModal(pokemon: any): void {
+        const modalRef = this.modalService.open(PokemonModalComponent, { size: 'lg' });
+        modalRef.componentInstance.pokemon = pokemon; // Pass the selected Pokémon data to the modal
     }
 }

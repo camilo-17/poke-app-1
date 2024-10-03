@@ -14,6 +14,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.0",
-    "pokedex-promise-v2": "^4.2.0"
+    "pokedex-promise-v2": "^4.2.0",
+    "pokemontcgsdk": "^2.0.0"
   }
 }

@@ -1,0 +1,43 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{ pokemon.name }} (HP: {{ pokemon.hp }})</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <!-- Left Column: Information -->
+        <div class="col-md-6">
+            <p><strong>Supertype:</strong> {{ pokemon.supertype }}</p>
+            <p><strong>Subtypes:</strong> {{ pokemon.subtypes.join(', ') }}</p>
+            <p><strong>Types:</strong> {{ pokemon.types.join(', ') }}</p>
+            <p><strong>Evolves From:</strong> {{ pokemon.evolvesFrom }}</p>
+
+            <h5>Abilities</h5>
+            <ul>
+                <li *ngFor="let ability of pokemon.abilities">
+                    <strong>{{ ability.name }}:</strong> {{ ability.text }}
+                </li>
+            </ul>
+
+            <h5>Attacks</h5>
+            <ul>
+                <li *ngFor="let attack of pokemon.attacks">
+                    <strong>{{ attack.name }}:</strong> {{ attack.damage }} damage (Cost: {{ attack.cost.join(', ') }})
+                </li>
+            </ul>
+
+            <p><strong>Weaknesses:</strong> {{ weaknesses }}</p>
+            <p><strong>Resistances:</strong> {{ resistances }}</p>
+        </div>
+
+        <!-- Right Column: Image and Chart -->
+        <div class="col-md-6 text-center">
+            <img [src]="pokemon.images.small" alt="{{ pokemon.name }}" class="img-fluid mb-3">
+            <app-pokemon-chart [pokemon]="pokemon"></app-pokemon-chart> <!-- Chart component -->
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+</div>

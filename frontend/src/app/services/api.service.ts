@@ -12,10 +12,10 @@ export class ApiService {
     constructor(private http: HttpClient) {}
 
     // Method to fetch paginated Pokémon list with error handling
-    getPokemons(limit: number = 20, offset: number = 0): Observable<any> {
-        const params = new HttpParams().set('limit', limit.toString()).set('offset', offset.toString());
+    getPokemons(): Observable<any> {
+        // const params = new HttpParams().set('limit', limit.toString()).set('offset', offset.toString());
 
-        return this.http.get(`${this.baseUrl}/pokeApi`, { params }).pipe(
+        return this.http.get(`${this.baseUrl}/pokeApi/cards`).pipe(
             catchError(this.handleError) // Handle errors here
         );
     }
