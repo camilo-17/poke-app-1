@@ -1,7 +1,4 @@
 import { AuthressClient } from '@authress/sdk';
-// const authress = new AuthressClient({
-//     authressApiUrl: 'https://acc-73v9ampdhpp03.login.authress.io',
-// });
 
 const authMiddleware = async (req, res, next) => {
     try {
