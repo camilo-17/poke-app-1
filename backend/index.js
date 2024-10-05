@@ -4,6 +4,9 @@ import cors from 'cors';
 import pokeApi from './routes/pokeApi.js';
 import errorHandle from './error/errorHandle.js';
 import payment from './routes/payment.js';
+import report from './routes/report.js';
+import 'dotenv/config';
+
 const app = express();
 
 app.use(cors());
@@ -16,6 +19,7 @@ app.get('/', (req, res) => {
 
 app.use('/pokeApi', pokeApi);
 app.use('/payment', payment);
+app.use('/report', report);
 
 app.use(errorHandle);
 

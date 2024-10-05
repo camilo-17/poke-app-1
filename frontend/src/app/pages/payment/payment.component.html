@@ -8,7 +8,9 @@
                 <div class="card-body">
                     <!-- Icono dependiendo del estado del pago -->
                     <div [ngClass]="{ 'text-success': isPaymentSuccessful(), 'text-danger': !isPaymentSuccessful() }">
-                        <i class="bi" [ngClass]="isPaymentSuccessful() ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill'" style="font-size: 4rem"></i>
+                        <i class="bi"
+                            [ngClass]="isPaymentSuccessful() ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill'"
+                            style="font-size: 4rem"></i>
                     </div>
                     <p class="card-text mt-3">{{ paymentStatus }}</p>
                     <a href="/" class="btn btn-primary">Go back to homepage</a>

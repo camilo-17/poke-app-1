@@ -9,6 +9,8 @@ export class PokemonModalComponent {
     @Input() pokemon: any;
     weaknesses: string = '';
     resistances: string = '';
+    quantity: number = 1;
+    isNotValid = false;
 
     constructor(public activeModal: NgbActiveModal) {}
 
@@ -37,7 +39,11 @@ export class PokemonModalComponent {
     }
 
     buy() {
-        this.activeModal.close(1);
+        if (this.quantity < 1) {
+            this.isNotValid = true;
+            return;
+        }
+        this.activeModal.close(this.quantity);
     }
 
     getWeaknesses(): string {
@@ -50,5 +56,17 @@ export class PokemonModalComponent {
 
     closeModal() {
         this.activeModal.close(0);
+    }
+
+    increment() {
+        if (this.quantity < 11) {
+            this.quantity++;
+        }
+    }
+
+    decrement() {
+        if (this.quantity > 1) {
+            this.quantity--;
+        }
     }
 }

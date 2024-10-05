@@ -1,12 +1,13 @@
 import express from 'express';
 import Stripe from 'stripe';
-
-import authMiddleware from '../middleware/auth.js';
+import jwtCheck from '../middleware/checkJwt.js';
+import connection from '../database/connection.js';
+import 'dotenv/config';
 
 const payment = express.Router();
-const stripe = new Stripe('');
+const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY);
 
-payment.post('/create', authMiddleware, async (req, res) => {
+payment.post('/create', jwtCheck, async (req, res) => {
     const { amount, currency } = req.body;
 
     try {
@@ -23,11 +24,12 @@ payment.post('/create', authMiddleware, async (req, res) => {
     }
 });
 
-payment.post('/confirm-payment', authMiddleware, async (req, res) => {
-    const { paymentIntentId } = req.body;
+payment.post('/confirm-payment', jwtCheck, async (req, res) => {
+    const { paymentIntentId, salesInfo } = req.body;
     try {
         const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
         if (paymentIntent.status === 'succeeded') {
+            await saveSale(salesInfo, req.user.client_id);
             res.json({ success: true, message: 'Payment confirmed' });
         } else {
             res.json({ success: false, message: 'Payment not successful' });
@@ -36,5 +38,19 @@ payment.post('/confirm-payment', authMiddleware, async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 });
+
+async function saveSale(saleData) {
+    const salesDataFormated = {
+        user_id: saleData.userEmail,
+        card_id: saleData.pokemonId,
+        username: saleData.userName,
+        product_name: saleData.productName,
+        price: saleData.price,
+        quantity: saleData.quantity,
+        currency: saleData.currency,
+        sales_date: saleData.salesDate,
+    };
+    await connection.query('INSERT INTO sales SET ?', salesDataFormated);
+}
 
 export default payment;

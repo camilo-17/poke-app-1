@@ -9,9 +9,8 @@ const authMiddleware = async (req, res, next) => {
         }
 
         const token = authorizationHeader.split(' ')[1];
-        const authressClient = new AuthressClient({ authressApiUrl: 'https://acc-73v9ampdhpp03.login.authress.io' });
+        const authressClient = new AuthressClient({ authressApiUrl: 'https://acc-73v9ampdhpp03.login.authress.io' }, process.env.CLIENT_SECRET_AUTH);
         const userIdentity = await authressClient.verifyToken(token);
-        console.log(userIdentity);
 
         req.user = userIdentity;
 

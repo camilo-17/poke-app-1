@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { firstValueFrom } from 'rxjs';
@@ -8,19 +8,20 @@ import { firstValueFrom } from 'rxjs';
     templateUrl: './payment.component.html',
     styleUrl: './payment.component.css',
 })
-export class PaymentComponent implements OnInit {
+export class PaymentComponent implements AfterViewInit {
     paymentStatus: string = 'Verifying...';
     paymentIntentId: string | null = null;
     paymentSuccess: boolean = false;
 
     constructor(private route: ActivatedRoute, private api: ApiService) {}
 
-    ngOnInit(): void {
-        this.route.queryParams.subscribe((params) => {
+    ngAfterViewInit(): void {
+        this.route.queryParams.subscribe(async (params) => {
             this.paymentIntentId = params['payment_intent'];
+            const salesInfo = JSON.parse(atob(params['salesInfo']));
 
             if (this.paymentIntentId) {
-                this.verifyPayment(this.paymentIntentId);
+                await this.verifyPayment(this.paymentIntentId, salesInfo);
             } else {
                 this.paymentStatus = 'No Payment Intent found';
             }
@@ -31,9 +32,9 @@ export class PaymentComponent implements OnInit {
         return this.paymentSuccess;
     }
 
-    async verifyPayment(paymentIntentId: string) {
+    async verifyPayment(paymentIntentId: string, salesInfo: any) {
         try {
-            const response = await firstValueFrom(this.api.confimPayment(paymentIntentId));
+            const response = await firstValueFrom(this.api.confimPayment(paymentIntentId, salesInfo));
             if (response.success) {
                 this.paymentSuccess = true;
                 this.paymentStatus = 'Payment successful! Thank you for your purchase.';

@@ -23,6 +23,7 @@
         "@angular/platform-server": "^17.0.0",
         "@angular/router": "^17.0.0",
         "@angular/ssr": "^17.0.5",
+        "@auth0/auth0-angular": "^2.2.3",
         "@authress/login": "^2.5.350",
         "@ng-bootstrap/ng-bootstrap": "^16.0.0",
         "@popperjs/core": "^2.11.8",

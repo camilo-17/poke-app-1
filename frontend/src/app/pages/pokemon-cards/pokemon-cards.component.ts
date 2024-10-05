@@ -9,6 +9,8 @@ import { environment } from '../../../environments/environment';
 import { PaymentModalComponent } from '../../components/payment-modal/payment-modal.component';
 import { PokemonModalComponent } from '../../components/pokemon-modal/pokemon-modal.component';
 import { AuthService } from '../../services/auth.service';
+import { AuthService as Auth0Service } from '@auth0/auth0-angular';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-root',
@@ -16,12 +18,14 @@ import { AuthService } from '../../services/auth.service';
     styleUrls: ['./pokemon-cards.component.css'],
 })
 export class PokemonCardsComponent implements OnInit {
-    constructor(private apiService: ApiService, private modalService: NgbModal, private authService: AuthService) {}
+    constructor(private apiService: ApiService, private router: Router, private modalService: NgbModal, private authService: AuthService, private auth0Service: Auth0Service) {}
     pokemons: any[] = [];
     searchTerm: string = '';
     filteredPokemons: any[] = [];
     loginClient: any;
     showLoading = true;
+    pokemonSelected: any = null;
+    user: any;
 
     async ngOnInit() {
         this.loginClient = new LoginClient({ authressApiUrl: environment.authApiUrl, applicationId: environment.authAppId });
@@ -29,17 +33,16 @@ export class PokemonCardsComponent implements OnInit {
     }
 
     async login() {
-        const isUserLoggedIn = await this.loginClient.userSessionExists();
-        if (!isUserLoggedIn) {
-            await this.loginClient.authenticate({
-                redirectUrl: window.location.href,
-            });
+        const isAuthenticated = await firstValueFrom(this.auth0Service.isAuthenticated$);
+        if (isAuthenticated) {
+            const token = await firstValueFrom(this.auth0Service.getAccessTokenSilently());
+            this.authService.setToken(token);
+            this.user = await firstValueFrom(this.auth0Service.user$);
+            console.log(`User: `, this.user);
+            await this.getPokemons();
+        } else {
+            this.auth0Service.loginWithRedirect();
         }
-        const token = await this.loginClient.ensureToken();
-        console.log(token);
-
-        this.authService.setToken(token);
-        await this.getPokemons();
     }
 
     // Mocked API call
@@ -51,7 +54,8 @@ export class PokemonCardsComponent implements OnInit {
     }
 
     async logOut() {
-        await this.loginClient.logout();
+        this.auth0Service.logout({ logoutParams: { returnTo: window.location.origin } });
+        this.user = null;
     }
 
     applySearchTerm(): void {
@@ -59,12 +63,13 @@ export class PokemonCardsComponent implements OnInit {
     }
 
     openPokemonModal(pokemon: any): void {
+        this.pokemonSelected = pokemon;
         const modalRef = this.modalService.open(PokemonModalComponent, { size: 'lg' });
         modalRef.componentInstance.pokemon = pokemon;
-        modalRef.result.then((result) => {
-            if (result === 1) {
+        modalRef.result.then((quantity) => {
+            if (quantity > 0) {
                 this.showLoading = true;
-                this.openPaymentModal();
+                this.openPaymentModal(quantity);
             }
         });
     }
@@ -78,8 +83,13 @@ export class PokemonCardsComponent implements OnInit {
         }
     }
 
-    async openPaymentModal() {
-        const [res, error] = await this.excObservableAsPromise(this.apiService.createPaymentIntent(1000, 'usd'));
+    goToSalesReport() {
+        this.router.navigate(['/report']);
+    }
+
+    async openPaymentModal(quantity: number) {
+        const price = this.pokemonSelected?.cardMarket?.prices?.averageSellPrice || 100;
+        const [res, error] = await this.excObservableAsPromise(this.apiService.createPaymentIntent(price, 'usd'));
         if (error) {
             return;
         }
@@ -91,11 +101,22 @@ export class PokemonCardsComponent implements OnInit {
         modalRef.result.then(async (result) => {
             if (result && stripe !== null) {
                 this.showLoading = true;
+                const salesInfo = {
+                    pokemonId: this.pokemonSelected.id,
+                    userEmail: this.user.email,
+                    userName: this.user.name,
+                    productName: this.pokemonSelected.name,
+                    price: price,
+                    quantity: quantity,
+                    currency: 'USD',
+                    salesDate: new Date(),
+                };
+
                 const { error } = await stripe.confirmPayment({
                     elements: result,
                     clientSecret: res.clientSecret,
                     confirmParams: {
-                        return_url: window.location.origin + '/payment',
+                        return_url: window.location.origin + '/checkout?salesInfo=' + btoa(JSON.stringify(salesInfo)),
                     },
                 });
                 this.showLoading = false;

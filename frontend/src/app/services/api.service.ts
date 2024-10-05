@@ -22,8 +22,12 @@ export class ApiService {
         });
     }
 
-    confimPayment(paymentIntentId: string): Observable<any> {
-        return this.http.post(`${this.baseUrl}/payment/confirm-payment`, { paymentIntentId });
+    getReport(): Observable<any> {
+        return this.http.get(`${this.baseUrl}/report/sales`);
+    }
+
+    confimPayment(paymentIntentId: string, salesInfo: any): Observable<any> {
+        return this.http.post(`${this.baseUrl}/payment/confirm-payment`, { paymentIntentId, salesInfo });
     }
 
     private handleError(error: HttpErrorResponse) {

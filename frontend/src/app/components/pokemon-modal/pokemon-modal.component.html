@@ -4,7 +4,6 @@
 </div>
 <div class="modal-body">
     <div class="row">
-        <!-- Left Column: Information -->
         <div class="col-md-6">
             <p><strong>Supertype:</strong> {{ pokemon.supertype }}</p>
             <p><strong>Subtypes:</strong> {{ pokemon.subtypes.join(', ') }}</p>
@@ -33,14 +32,27 @@
 
             <p><strong>Weaknesses:</strong> {{ weaknesses }}</p>
             <p><strong>Resistances:</strong> {{ resistances }}</p>
+            <div class="d-flex flex-start" style="gap: 15px;">
+                <div class="input-group w-50">
+                    <button class="btn btn-outline-secondary" (click)="decrement()"
+                        [disabled]="quantity <= 1">-</button>
+
+                    <input type="number" class="form-control form-control-sm text-center" [min]="1"
+                        [(ngModel)]=" quantity" min="1" [ngClass]="{'is-invalid': isNotValid}" />
+
+                    <button class="btn btn-outline-secondary" (click)="increment()">+</button>
+                </div>
+                <button type="button" ngbAutofocus class="btn btn-success w-100  mt-10" (click)="buy()">Buy</button>
+            </div>
+            <div class="invalid-feedback" *ngIf="isNotValid">
+                Please choose a username.
+            </div>
+
         </div>
 
-        <!-- Right Column: Image and Chart -->
         <div class="col-md-6 text-center">
             <img [src]="pokemon.images.small" alt="{{ pokemon.name }}" class="img-fluid mb-3 custom-width" />
             <app-pokemon-chart [pokemon]="pokemon"></app-pokemon-chart>
-            <button type="button" ngbAutofocus class="btn btn-success w-100" (click)="buy()">Comprar</button>
-            <!-- Chart component -->
         </div>
     </div>
 </div>

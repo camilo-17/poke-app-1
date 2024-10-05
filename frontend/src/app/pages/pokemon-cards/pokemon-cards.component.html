@@ -1,9 +1,10 @@
 <div class="container">
     <div class="d-flex justify-content-end mt-3">
         <div ngbDropdown class="d-inline-block" style="background-color: white; border-radius: 10%">
-            <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Opciones</button>
+            <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Options</button>
             <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                 <button ngbDropdownItem (click)="logOut()">Log out</button>
+                <button ngbDropdownItem (click)="goToSalesReport()">Sales Report</button>
             </div>
         </div>
     </div>
@@ -21,14 +22,8 @@
 
     <div class="content" *ngIf="!showLoading">
         <div class="input-group mb-4">
-            <input
-                type="text"
-                [(ngModel)]="searchTerm"
-                (ngModelChange)="applySearchTerm()"
-                class="form-control"
-                placeholder="Search Pokémon by name..."
-                aria-label="Search Pokémon"
-            />
+            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="applySearchTerm()" class="form-control"
+                placeholder="Search Pokémon by name..." aria-label="Search Pokémon" />
         </div>
 
         <div class="row">
