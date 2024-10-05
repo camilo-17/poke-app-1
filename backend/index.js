@@ -13,13 +13,13 @@ app.use(cors());
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
-app.get('/', (req, res) => {
+app.get('/api/', (req, res) => {
     res.send('Api pokemon project working correctly');
 });
 
-app.use('/pokeApi', pokeApi);
-app.use('/payment', payment);
-app.use('/report', report);
+app.use('/api/pokeApi', pokeApi);
+app.use('/api/payment', payment);
+app.use('/api/report', report);
 
 app.use(errorHandle);
 

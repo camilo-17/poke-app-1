@@ -7,3 +7,9 @@
     max-width: 600px;
     margin: auto;
   }
+
+
+  .custom-table {
+    max-width: 100vh;
+    overflow-x: auto;
+  }

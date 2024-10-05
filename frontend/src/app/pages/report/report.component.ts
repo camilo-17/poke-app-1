@@ -91,6 +91,6 @@ export class ReportComponent implements OnInit {
         this.auth0Service.logout({ logoutParams: { returnTo: window.location.origin } });
     }
     goToHome() {
-        this.router.navigate(['/report']);
+        this.router.navigate(['/pokemons']);
     }
 }

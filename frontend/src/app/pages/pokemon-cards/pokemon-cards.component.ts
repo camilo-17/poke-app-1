@@ -38,14 +38,12 @@ export class PokemonCardsComponent implements OnInit {
             const token = await firstValueFrom(this.auth0Service.getAccessTokenSilently());
             this.authService.setToken(token);
             this.user = await firstValueFrom(this.auth0Service.user$);
-            console.log(`User: `, this.user);
             await this.getPokemons();
         } else {
             this.auth0Service.loginWithRedirect();
         }
     }
 
-    // Mocked API call
     async getPokemons() {
         const cards: any = await firstValueFrom(this.apiService.getPokemons());
         this.pokemons = cards.data;

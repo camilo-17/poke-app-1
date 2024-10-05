@@ -1,4 +1,4 @@
-/* pokemon-modal.component.css */
+
 .modal-body {
     display: flex;
     justify-content: space-between;
@@ -6,11 +6,12 @@
 }
 
 .modal-header {
-    background-color: #f8d7da; /* Rojo claro */
-    color: #721c24; /* Color de texto para el encabezado */
+    background-color: #f8d7da; 
+    color: #721c24;
 }
 
 .modal-footer {
-    background-color: #f8d7da; /* Rojo claro */
+    background-color: #f8d7da;
     justify-content: flex-end;
 }
+

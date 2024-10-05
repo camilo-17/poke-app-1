@@ -7,10 +7,10 @@ const report = express.Router();
 report.get('/sales', jwtCheck, async (req, res) => {
     try {
         const [rows] = await connection.execute(`
-        SELECT 
+      SELECT 
           user_id, card_id, username, product_name, price, quantity, currency, sales_date, (quantity * price) AS total_sale
         FROM 
-          sales
+          sales ORDER BY sales_date DESC
       `);
 
         res.json(rows);

@@ -7,7 +7,7 @@ pokemon.configure({ apiKey: process.env.POKEMON_API_KEY });
 
 pokeApi.get('/cards', jwtCheck, async (req, res, next) => {
     try {
-        const cards = await pokemon.card.where({ pageSize: 10, page: 1 });
+        const cards = await pokemon.card.where({ pageSize: 50, page: 1 });
         res.json({
             ...cards,
         });

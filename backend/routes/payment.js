@@ -29,7 +29,7 @@ payment.post('/confirm-payment', jwtCheck, async (req, res) => {
     try {
         const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
         if (paymentIntent.status === 'succeeded') {
-            await saveSale(salesInfo, req.user.client_id);
+            await saveSale(salesInfo);
             res.json({ success: true, message: 'Payment confirmed' });
         } else {
             res.json({ success: false, message: 'Payment not successful' });
