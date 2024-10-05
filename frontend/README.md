@@ -1,27 +1,124 @@
-# Frontend
+# Proyecto Fullstack - Instrucciones de Ejecución
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.5.
+Este proyecto consta de dos partes: un **frontend** hecho en Angular y un **backend** desarrollado con Node.js. Sigue las instrucciones a continuación para ejecutar ambas partes correctamente.
 
-## Development server
+## Requisitos Previos
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Asegúrate de tener instalado en tu sistema:
 
-## Code scaffolding
+-   Node.js
+-   npm (Node Package Manager)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Pasos para ejecutar el proyecto
 
-## Build
+### 1. Clona el repositorio
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+git clone https://github.com/usuario/proyecto.git
+cd proyecto
+```
 
-## Running unit tests
+### 2. Instalar dependencias del **frontend**
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+1. Cambia al directorio del frontend:
 
-## Running end-to-end tests
+    ```bash
+    cd frontend
+    ```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+2. Instala las dependencias necesarias:
 
-## Further help
+    ```bash
+    npm install
+    ```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### 3. Instalar dependencias del **backend**
+
+1. Abre una nueva terminal y navega al directorio del backend:
+
+    ```bash
+    cd backend
+    ```
+
+2. Instala las dependencias necesarias:
+
+    ```bash
+    npm install
+    ```
+
+### 4. Configuración de variables de entorno
+
+#### Backend
+
+1. Crea un archivo `.env` en el directorio `backend`.
+2. Agrega las siguientes variables de entorno al archivo `.env`:
+
+    ```env
+    DB_PASSWORD=""
+    POKEMON_API_KEY=""
+    STRIPE_PRIVATE_KEY=""
+    CLIENT_SECRET_AUTH=""
+    DB_HOST=""
+    DB_USER=""
+    DB_PASSWORD=""
+    DB_NAME=""
+    ```
+
+#### Frontend (Angular)
+
+1. Abre el archivo `src/environments/environment.ts` en el directorio `frontend`.
+2. Asegúrate de agregar las variables necesarias, por ejemplo:
+
+    ```typescript
+    export const environment = {
+        publicApiStripe: 'your_stripe_public_key',
+        authAppId: 'your_auth_app_id',
+        authApiUrl: 'your_auth_api_url',
+        auth0: {
+            domain: 'your_auth0_domain',
+            clientId: 'your_auth0_clientId',
+            authorizationParams: {
+                redirect_uri: window.location.origin,
+                audience: 'http://localhost:4200',
+            },
+            httpInterceptor: {
+                allowedList: [`http://localhost:3000/*`],
+            },
+        },
+    };
+    ```
+
+### 5. Ejecutar el proyecto
+
+#### Frontend
+
+1. En la terminal donde instalaste las dependencias del frontend, ejecuta:
+
+    ```bash
+    npm run start
+    ```
+
+    Esto iniciará el servidor de desarrollo de Angular.
+
+#### Backend
+
+1. En la terminal donde instalaste las dependencias del backend, ejecuta:
+
+    ```bash
+    npm run dev
+    ```
+
+    Esto iniciará el servidor de desarrollo del backend en modo watch.
+
+### 6. Acceso a la aplicación
+
+Una vez que ambos servidores están corriendo, puedes acceder a la aplicación frontend en tu navegador en:
+
+```
+http://localhost:4200
+```
+
+## Notas
+
+-   Asegúrate de que el backend esté configurado correctamente con las bases de datos y servicios externos.
+-   Revisa los logs de ambos servidores para asegurarte de que todo esté funcionando correctamente.
